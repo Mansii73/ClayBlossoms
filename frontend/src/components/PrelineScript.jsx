@@ -1,20 +1,46 @@
-"use client";
+'use client';
 
-import { usePathname } from "next/navigation";
-import { useEffect } from "react";
+import { createContext, useState, useEffect, useContext } from 'react';
+import { useRouter } from 'next/navigation';
 
-export default function PrelineScript() {
-  const path = usePathname();
+const AppContext = createContext();
 
+export const AppProvider = ({ children }) => {
+  const router = useRouter();
+
+  const [currentUser, setCurrentUser] = useState(null);
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  // ✅ Yeh part safe browser ke liye
   useEffect(() => {
-    const loadPreline = async () => {
-      await import("preline/preline");
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user) {
+      setCurrentUser(user);
+      setLoggedIn(true);
+    }
+  }, []);
 
-      window.HSStaticMethods.autoInit();
-    };
+  const logout = () => {
+    setCurrentUser(null);
+    localStorage.removeItem("user");
+    setLoggedIn(false);
+    router.push("/login");
+  };
 
-    loadPreline();
-  }, [path]);
+  return (
+    <AppContext.Provider
+      value={{
+        currentUser,
+        setCurrentUser,
+        loggedIn,
+        setLoggedIn,
+        logout,
+      }}
+    >
+      {children}
+    </AppContext.Provider>
+  );
+};
 
-  return null;
-}
+const useAppContext = () => useContext(AppContext);
+export default useAppContext;
