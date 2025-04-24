@@ -1,13 +1,16 @@
 import React from 'react'
-import Header from '../components/Header'
+import Navbar from '../components/Navbar';
 import App from '../components/App'
 import Card from '../components/Card'
+
+
 const Home = () => {
   return (
     <div>
-      <div><Header/></div>
+      <div><Navbar/></div>
       <div><App/></div>
       <div><Card/></div>
+      
     </div>
   )
 }
