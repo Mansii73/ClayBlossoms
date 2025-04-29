@@ -3,6 +3,8 @@ const express = require('express');
 require('dotenv').config();
 const UserRouter = require('./routers/UserRouter');
 const cors = require('cors');
+const ProductRouter = require('./routers/ProductRouter');
+const cors = require('cors');
 
 // initialize express
 const app = express();
