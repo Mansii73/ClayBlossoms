@@ -1,26 +1,26 @@
-import React from 'react';
-
-const ProductCard = ({ product }) => {
+const Products = ({ name, price }) => {
   return (
-    <div className="max-w-sm bg-white rounded-xl shadow-md overflow-hidden">
+    <div className="max-w-sm rounded-2xl overflow-hidden shadow-lg bg-white p-4">
       <img
-        src={product.image}
-        alt={product.name}
-        className="w-full h-48 object-cover"
+        className="w-full h-48 object-cover rounded-xl"
+        src="/images/Demoiselle patterened mugs -Waves,matte blue - Copy.png"
+        alt={name}
       />
-      <div className="p-4">
-        <h2 className="text-lg font-semibold">{product.name}</h2>
-        <p className="text-gray-500">{product.description}</p>
-        <div className="mt-2 flex items-center justify-between">
-          <span className="text-green-600 font-bold">₹{product.price}</span>
-          <button className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700">
-            Add to Cart
-          </button>
-        </div>
+      <div className="pt-4">
+         <h2 className="text-xl font-semibold text-blue-800">Demoiselle pattern mugs - Waves, matte blue</h2>
+
+        <p className="text-lg text-green-600 font-medium mt-1">₹{250}</p>
+        <button className="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition">
+          + Add to Cart
+        </button>
       </div>
     </div>
   );
 };
 
-export default ProductCard;
+// Example usage
+
+
+ 
+ export default Products;
 
