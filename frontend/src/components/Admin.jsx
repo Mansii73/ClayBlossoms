@@ -17,7 +17,7 @@ import {
 } from 'react-icons/fa';
 import axios from 'axios';
 
-export default function Admin() {
+const Admin = () => {
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -43,6 +43,38 @@ export default function Admin() {
     { id: '3', customer: 'Mike Johnson', amount: '₹899', status: 'Pending' },
   ];
 
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    router.push(`/admin/${tab === 'dashboard' ? '' : tab}`);
+  };
+
+  const handleAddProduct = () => {
+    router.push('/admin/products/add');
+  };
+
+  const handleEditProduct = (id) => {
+    router.push(`/admin/products/edit/${id}`);
+  };
+
+  const handleDeleteProduct = async (id) => {
+    if (window.confirm('Are you sure you want to delete this product?')) {
+      try {
+        await axios.delete(`/api/products/${id}`);
+        setProducts(products.filter(product => product.id !== id));
+      } catch (error) {
+        setError('Failed to delete product');
+      }
+    }
+  };
+
+  const handleViewOrder = (id) => {
+    router.push(`/admin/orders/${id}`);
+  };
+
+  const handleViewUser = (id) => {
+    router.push(`/admin/users/${id}`);
+  };
+
   useEffect(() => {
     if (activeTab === 'products') {
       fetchProducts();
@@ -60,21 +92,6 @@ export default function Admin() {
     }
   };
 
-  const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this product?')) {
-      try {
-        await axios.delete(`/api/products/${id}`, {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
-        });
-        fetchProducts();
-      } catch (err) {
-        setError('Failed to delete product');
-      }
-    }
-  };
-
   const filteredProducts = products.filter(product => {
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          product.description.toLowerCase().includes(searchTerm.toLowerCase());
@@ -88,13 +105,13 @@ export default function Admin() {
         <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
         <div className="flex gap-4">
           <button
-            onClick={() => setActiveTab('products')}
+            onClick={() => handleTabChange('products')}
             className="px-4 py-2 bg-amber-600 text-white rounded-md hover:bg-amber-700"
           >
             Add Product
           </button>
           <button
-            onClick={() => setActiveTab('orders')}
+            onClick={() => handleTabChange('orders')}
             className="px-4 py-2 border border-amber-600 text-amber-600 rounded-md hover:bg-amber-50"
           >
             New Order
@@ -167,7 +184,7 @@ export default function Admin() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     <button
-                      onClick={() => setActiveTab('orders')}
+                      onClick={() => handleTabChange('orders')}
                       className="text-amber-600 hover:text-amber-900"
                     >
                       View Details
@@ -187,7 +204,7 @@ export default function Admin() {
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-gray-800">Products</h1>
         <button
-          onClick={() => setActiveTab('add-product')}
+          onClick={() => handleTabChange('add-product')}
           className="flex items-center px-4 py-2 bg-amber-600 text-white rounded-md hover:bg-amber-700"
         >
           <FaPlus className="mr-2" />
@@ -284,13 +301,13 @@ export default function Admin() {
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <div className="flex space-x-3">
                       <button
-                        onClick={() => setActiveTab('edit-product')}
+                        onClick={() => handleEditProduct(product._id)}
                         className="text-amber-600 hover:text-amber-900"
                       >
                         <FaEdit />
                       </button>
                       <button
-                        onClick={() => handleDelete(product._id)}
+                        onClick={() => handleDeleteProduct(product._id)}
                         className="text-red-600 hover:text-red-900"
                       >
                         <FaTrash />
@@ -328,7 +345,7 @@ export default function Admin() {
 
         <nav className="mt-6">
           <button
-            onClick={() => setActiveTab('dashboard')}
+            onClick={() => handleTabChange('dashboard')}
             className={`
               w-full flex items-center px-6 py-3 text-gray-700 hover:bg-amber-50 hover:text-amber-600
               ${activeTab === 'dashboard' ? 'bg-amber-50 text-amber-600 border-r-4 border-amber-600' : ''}
@@ -338,7 +355,7 @@ export default function Admin() {
             Dashboard
           </button>
           <button
-            onClick={() => setActiveTab('products')}
+            onClick={() => handleTabChange('products')}
             className={`
               w-full flex items-center px-6 py-3 text-gray-700 hover:bg-amber-50 hover:text-amber-600
               ${activeTab === 'products' ? 'bg-amber-50 text-amber-600 border-r-4 border-amber-600' : ''}
@@ -348,7 +365,7 @@ export default function Admin() {
             Products
           </button>
           <button
-            onClick={() => setActiveTab('orders')}
+            onClick={() => handleTabChange('orders')}
             className={`
               w-full flex items-center px-6 py-3 text-gray-700 hover:bg-amber-50 hover:text-amber-600
               ${activeTab === 'orders' ? 'bg-amber-50 text-amber-600 border-r-4 border-amber-600' : ''}
@@ -358,7 +375,7 @@ export default function Admin() {
             Orders
           </button>
           <button
-            onClick={() => setActiveTab('users')}
+            onClick={() => handleTabChange('users')}
             className={`
               w-full flex items-center px-6 py-3 text-gray-700 hover:bg-amber-50 hover:text-amber-600
               ${activeTab === 'users' ? 'bg-amber-50 text-amber-600 border-r-4 border-amber-600' : ''}
@@ -368,7 +385,7 @@ export default function Admin() {
             Users
           </button>
           <button
-            onClick={() => setActiveTab('settings')}
+            onClick={() => handleTabChange('settings')}
             className={`
               w-full flex items-center px-6 py-3 text-gray-700 hover:bg-amber-50 hover:text-amber-600
               ${activeTab === 'settings' ? 'bg-amber-50 text-amber-600 border-r-4 border-amber-600' : ''}
@@ -395,4 +412,6 @@ export default function Admin() {
       </main>
     </div>
   );
-}
+};
+
+export default Admin;
