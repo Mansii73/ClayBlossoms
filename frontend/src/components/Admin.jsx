@@ -16,6 +16,7 @@ import {
   FaRupeeSign
 } from 'react-icons/fa';
 import axios from 'axios';
+import ProductManagement from './Admin/ProductManagement';
 
 const Admin = () => {
   const router = useRouter();
@@ -404,7 +405,7 @@ const Admin = () => {
       `}>
         <div className="p-8">
           {activeTab === 'dashboard' && renderDashboard()}
-          {activeTab === 'products' && renderProducts()}
+          {activeTab === 'products' && <ProductManagement />}
           {activeTab === 'orders' && <div>Orders Page</div>}
           {activeTab === 'users' && <div>Users Page</div>}
           {activeTab === 'settings' && <div>Settings Page</div>}

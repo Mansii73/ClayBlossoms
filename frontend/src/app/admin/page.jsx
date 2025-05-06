@@ -1,7 +1,11 @@
 'use client';
 
-import Admin from '../../components/Admin';
+import Admin from '@/components/Admin';
 
 export default function AdminPage() {
-  return <Admin />;
+  return (
+    <div className="min-h-screen">
+      <Admin />
+    </div>
+  );
 } 
