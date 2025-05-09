@@ -12,15 +12,15 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 // ➕ Debugging: Log MongoDB URI to check if it's loaded correctly
-console.log("MongoDB URI: ", process.env.DB_URL);  // Updated to use DB_URL
+// console.log("MongoDB URI: ", process.env.DB_URL);  // Updated to use DB_URL
 
-// ➕ Connect to MongoDB Atlas
-mongoose.connect(process.env.DB_URL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => console.log("✅ MongoDB Connected"))
-.catch((err) => console.error("❌ MongoDB Error:", err));
+// // ➕ Connect to MongoDB Atlas
+// mongoose.connect(process.env.DB_URL, {
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true,
+// })
+// .then(() => console.log("✅ MongoDB Connected"))
+// .catch((err) => console.error("❌ MongoDB Error:", err));
 
 // middlewares
 app.use(cors({ origin: '*' }));

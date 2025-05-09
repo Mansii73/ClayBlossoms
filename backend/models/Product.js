@@ -46,12 +46,13 @@ const productSchema = new mongoose.Schema({
     },
     review: String
   }],
-  averageRating: {
-    type: Number,
-    default: 0
-  }
+  
 }, {
-  timestamps: true
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
+  
 });
 
 module.exports = mongoose.model('Product', productSchema); 
