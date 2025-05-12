@@ -3,8 +3,8 @@ const express = require('express');
 require('dotenv').config();
 const UserRouter = require('./routers/UserRouter');
 const cors = require('cors');
-const ProductRouter = require('./routers/ProductRouter');
-const cors = require('cors');
+const ProductRouter = require('./routers/productRoutes');
+// const cors = require('cors');
 
 // initialize express
 const app = express();
@@ -19,7 +19,7 @@ app.use(cors({
 
 app.use(express.json());
 app.use('/user', UserRouter);
-// app.use('/product', ProductRouter);
+app.use('/product', ProductRouter);
 
 // endpoints or routes
 app.get('/', (req, res) => {

@@ -68,7 +68,8 @@ router.get('/products/:id', async (req, res) => {
 });
 
 // Create product (Admin only)
-router.post('/products', isAuthenticated, isAdmin, async (req, res) => {
+router.post('/add', async (req, res) => {
+  console.log(req.body);
   try {
     const product = new Product(req.body);
     const savedProduct = await product.save();
@@ -145,4 +146,4 @@ router.post('/products/:id/reviews', isAuthenticated, async (req, res) => {
   }
 });
 
-module.exports = router; 
+module.exports = router;

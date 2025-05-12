@@ -30,8 +30,8 @@ const productSchema = new mongoose.Schema({
     min: 0,
     default: 0
   },
-  featured: {
-    type: Boolean,
+  brand: {
+    type: String,
     default: false
   },
   ratings: [{
@@ -46,10 +46,6 @@ const productSchema = new mongoose.Schema({
     },
     review: String
   }],
-  averageRating: {
-    type: Number,
-    default: 0
-  }
 }, {
   timestamps: true
 });

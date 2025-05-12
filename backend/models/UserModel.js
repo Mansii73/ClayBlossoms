@@ -1,6 +1,7 @@
-const { Schema, model } = require('../connection');
+const mongoose = require('mongoose');
+const { Schema, model } = mongoose;
 
-const mySchema = new Schema({
+const userSchema = new mongoose.Schema({
     name: String,
     email: { type: String, unique: true },
     password: { type: String, required: true },
@@ -9,4 +10,4 @@ const mySchema = new Schema({
     createdAt: { type: Date, default: Date.now }
 })
 
-module.exports = model('users', mySchema);
+module.exports = model('users', userSchema);
