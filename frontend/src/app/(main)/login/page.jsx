@@ -4,17 +4,17 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { FaEnvelope, FaLock, FaEye, FaEyeSlash } from 'react-icons/fa';
-import axios from 'axios';
+import { useAuth } from '../../../context/AuthContext';
 
 export default function Login() {
   const router = useRouter();
+  const { login, error: authError, loading } = useAuth();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
@@ -26,25 +26,12 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    setLoading(true);
 
     try {
-      const response = await axios.post('/api/auth/login', formData);
-      const { token, user } = response.data;
-      
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(user));
-
-      // Check if user is admin and redirect accordingly
-      if (user.role === 'admin') {
-        router.push('/admin');
-      } else {
-        router.push('/');
-      }
+      await login(formData.email, formData.password);
+      // Redirect will be handled by the login function in AuthContext
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed. Please try again.');
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -60,9 +47,9 @@ export default function Login() {
           </p>
         </div>
 
-        {error && (
+        {(error || authError) && (
           <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded relative" role="alert">
-            <span className="block sm:inline">{error}</span>
+            <span className="block sm:inline">{error || authError}</span>
           </div>
         )}
 
