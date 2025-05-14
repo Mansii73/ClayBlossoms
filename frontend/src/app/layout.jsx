@@ -1,4 +1,6 @@
 import './globals.css';
+import Navbar from './(main)/Navbar';
+import { AuthProvider } from '../context/AuthContext';
 
 export const metadata = {
   title: 'ClayBlossoms',
@@ -9,7 +11,10 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        {children}
+        <AuthProvider>
+          <Navbar />
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );

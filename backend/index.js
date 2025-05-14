@@ -2,7 +2,7 @@
 require('dotenv').config(); // Load environment variables
 
 const express = require('express');
-const mongoose = require('mongoose'); // 👈 Add this line
+const mongoose = require('mongoose');
 const UserRouter = require('./routers/UserRouter');
 const cors = require('cors');
 <<<<<<< HEAD
@@ -16,24 +16,23 @@ const ProductRouter = require('./routers/productRoutes');
 const app = express();
 const port = process.env.PORT || 5000;
 
-// ➕ Debugging: Log MongoDB URI to check if it's loaded correctly
-// console.log("MongoDB URI: ", process.env.DB_URL);  // Updated to use DB_URL
-
-// // ➕ Connect to MongoDB Atlas
-// mongoose.connect(process.env.DB_URL, {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true,
-// })
-// .then(() => console.log("✅ MongoDB Connected"))
-// .catch((err) => console.error("❌ MongoDB Error:", err));
+// Connect to MongoDB
+mongoose.connect(process.env.DB_URL)
+  .then(() => console.log("✅ MongoDB Connected"))
+  .catch((err) => console.error("❌ MongoDB Error:", err));
 
 // middlewares
 app.use(cors({ origin: '*' }));
 app.use(express.json());
 
 // routers
+<<<<<<< HEAD
 app.use('/user', UserRouter);
 app.use('/product', ProductRouter);
+=======
+app.use('/api/auth', UserRouter); // Updated route to match frontend
+// app.use('/product', ProductRouter);
+>>>>>>> 6cccf694d541bc9294bd80c08ac0e3bc62354043
 
 // test routes
 app.get('/', (req, res) => {

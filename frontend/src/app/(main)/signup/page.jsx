@@ -2,11 +2,12 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { FaUser, FaEnvelope, FaLock, FaEye, FaEyeSlash } from 'react-icons/fa';
-import axios from 'axios';
+import { FaEnvelope, FaLock, FaUser, FaEye, FaEyeSlash } from 'react-icons/fa';
+import { useAuth } from '../../../context/AuthContext';
 
 export default function Signup() {
   const router = useRouter();
+  const { signup, error: authError, loading } = useAuth();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -16,7 +17,6 @@ export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
@@ -29,27 +29,25 @@ export default function Signup() {
     e.preventDefault();
     setError('');
 
+    // Validate passwords match
     if (formData.password !== formData.confirmPassword) {
       setError('Passwords do not match');
       return;
     }
 
-    setLoading(true);
+    // Validate password strength
+    if (formData.password.length < 6) {
+      setError('Password must be at least 6 characters long');
+      return;
+    }
 
     try {
-      const response = await axios.post('/api/auth/signup', {
-        name: formData.name,
-        email: formData.email,
-        password: formData.password
-      });
-      
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('user', JSON.stringify(response.data.user));
-      router.push('/');
+      // Remove confirmPassword before sending to API
+      const { confirmPassword, ...signupData } = formData;
+      await signup(signupData);
+      // Redirect will be handled by the signup function in AuthContext
     } catch (err) {
       setError(err.response?.data?.message || 'Signup failed. Please try again.');
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -58,21 +56,22 @@ export default function Signup() {
       <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-md">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Create your account
+            Create Your Account
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
             Join ClayBlossoms today
           </p>
         </div>
 
-        {error && (
+        {(error || authError) && (
           <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded relative" role="alert">
-            <span className="block sm:inline">{error}</span>
+            <span className="block sm:inline">{error || authError}</span>
           </div>
         )}
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="rounded-md shadow-sm space-y-4">
+            {/* Name Field */}
             <div>
               <label htmlFor="name" className="sr-only">Full Name</label>
               <div className="relative">
@@ -93,6 +92,7 @@ export default function Signup() {
               </div>
             </div>
 
+            {/* Email Field */}
             <div>
               <label htmlFor="email" className="sr-only">Email address</label>
               <div className="relative">
@@ -113,6 +113,7 @@ export default function Signup() {
               </div>
             </div>
 
+            {/* Password Field */}
             <div>
               <label htmlFor="password" className="sr-only">Password</label>
               <div className="relative">
@@ -146,6 +147,7 @@ export default function Signup() {
               </div>
             </div>
 
+            {/* Confirm Password Field */}
             <div>
               <label htmlFor="confirmPassword" className="sr-only">Confirm Password</label>
               <div className="relative">
@@ -188,7 +190,7 @@ export default function Signup() {
                 loading ? 'opacity-50 cursor-not-allowed' : ''
               }`}
             >
-              {loading ? 'Creating account...' : 'Sign up'}
+              {loading ? 'Creating Account...' : 'Sign Up'}
             </button>
           </div>
 

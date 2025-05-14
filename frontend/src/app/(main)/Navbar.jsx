@@ -2,11 +2,13 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { FaShoppingCart, FaSearch } from "react-icons/fa";
+import { FaShoppingCart, FaSearch, FaUser, FaSignOutAlt } from "react-icons/fa";
 import { GiStoneWheel } from "react-icons/gi"; // Pottery symbol
+import { useAuth } from "../../context/AuthContext";
 
 export default function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const { user, logout, isAdmin } = useAuth();
 
   return (
     <nav className="bg-white border-b border-gray-200">
@@ -49,21 +51,58 @@ export default function Navbar() {
               <span>Cart</span>
             </Link>
 
-            {/* Login Button */}
-            <Link 
-              href="/login"
-              className="text-gray-600 hover:text-amber-700 transition-colors duration-200"
-            >
-              Login
-            </Link>
+            {user ? (
+              <div className="relative">
+                <button
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                  className="flex items-center space-x-1 text-gray-600 hover:text-amber-700 transition-colors duration-200"
+                >
+                  <FaUser size={18} />
+                  <span>{user.name}</span>
+                </button>
 
-            {/* Sign Up Button */}
-            <Link 
-              href="/signin"
-              className="px-4 py-2 rounded-md bg-amber-600 text-white hover:bg-amber-700 transition-colors duration-200"
-            >
-              Sign Up
-            </Link>
+                {isDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
+                    {isAdmin() && (
+                      <Link
+                        href="/admin"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-amber-50"
+                      >
+                        Admin Dashboard
+                      </Link>
+                    )}
+                    <Link
+                      href="/profile"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-amber-50"
+                    >
+                      Profile
+                    </Link>
+                    <button
+                      onClick={logout}
+                      className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-amber-50 flex items-center space-x-2"
+                    >
+                      <FaSignOutAlt size={14} />
+                      <span>Logout</span>
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <>
+                <Link 
+                  href="/login"
+                  className="text-gray-600 hover:text-amber-700 transition-colors duration-200"
+                >
+                  Login
+                </Link>
+                <Link 
+                  href="/signup"
+                  className="px-4 py-2 rounded-md bg-amber-600 text-white hover:bg-amber-700 transition-colors duration-200"
+                >
+                  Sign Up
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>
