@@ -46,8 +46,16 @@ const productSchema = new mongoose.Schema({
     },
     review: String
   }],
+<<<<<<< HEAD
+=======
+  
+>>>>>>> 5fe7e71ce3909064a4ccb4881d84de0faa000ad0
 }, {
-  timestamps: true
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
+  
 });
 
 module.exports = mongoose.model('Product', productSchema); 

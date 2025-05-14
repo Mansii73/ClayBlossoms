@@ -1,55 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const Product = require('../models/Product');
-const { isAuthenticated, isAdmin } = require('../middlewares/auth');
 
 // Get all products
 router.get('/products', async (req, res) => {
   try {
-    const { category, featured, search, sort, page = 1, limit = 10 } = req.query;
-    let query = {};
-
-    // Filter by category
-    if (category) {
-      query.category = category;
-    }
-
-    // Filter featured products
-    if (featured === 'true') {
-      query.featured = true;
-    }
-
-    // Search by name or description
-    if (search) {
-      query.$or = [
-        { name: { $regex: search, $options: 'i' } },
-        { description: { $regex: search, $options: 'i' } }
-      ];
-    }
-
-    // Sorting
-    let sortOption = {};
-    if (sort === 'price-asc') {
-      sortOption = { price: 1 };
-    } else if (sort === 'price-desc') {
-      sortOption = { price: -1 };
-    } else if (sort === 'rating') {
-      sortOption = { averageRating: -1 };
-    }
-
-    const products = await Product.find(query)
-      .sort(sortOption)
-      .limit(limit * 1)
-      .skip((page - 1) * limit);
-
-    const count = await Product.countDocuments(query);
-
-    res.json({
-      products,
-      totalPages: Math.ceil(count / limit),
-      currentPage: page
-    });
+    const products = await Product.find();
+    res.json(products);
   } catch (error) {
+    console.error('Error fetching products:', error);
     res.status(500).json({ message: error.message });
   }
 });
@@ -67,20 +26,26 @@ router.get('/products/:id', async (req, res) => {
   }
 });
 
+<<<<<<< HEAD
 // Create product (Admin only)
 router.post('/add', async (req, res) => {
   console.log(req.body);
+=======
+// Create product
+router.post('/products', async (req, res) => {
+>>>>>>> 5fe7e71ce3909064a4ccb4881d84de0faa000ad0
   try {
     const product = new Product(req.body);
     const savedProduct = await product.save();
     res.status(201).json(savedProduct);
   } catch (error) {
+    console.error('Error creating product:', error);
     res.status(400).json({ message: error.message });
   }
 });
 
-// Update product (Admin only)
-router.put('/products/:id', isAuthenticated, isAdmin, async (req, res) => {
+// Update product
+router.put('/products/:id', async (req, res) => {
   try {
     const product = await Product.findByIdAndUpdate(
       req.params.id,
@@ -92,12 +57,13 @@ router.put('/products/:id', isAuthenticated, isAdmin, async (req, res) => {
     }
     res.json(product);
   } catch (error) {
+    console.error('Error updating product:', error);
     res.status(400).json({ message: error.message });
   }
 });
 
-// Delete product (Admin only)
-router.delete('/products/:id', isAuthenticated, isAdmin, async (req, res) => {
+// Delete product
+router.delete('/products/:id', async (req, res) => {
   try {
     const product = await Product.findByIdAndDelete(req.params.id);
     if (!product) {
@@ -105,6 +71,7 @@ router.delete('/products/:id', isAuthenticated, isAdmin, async (req, res) => {
     }
     res.json({ message: 'Product deleted successfully' });
   } catch (error) {
+    console.error('Error deleting product:', error);
     res.status(500).json({ message: error.message });
   }
 });
