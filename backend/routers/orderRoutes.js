@@ -2,10 +2,10 @@ const express = require('express');
 const router = express.Router();
 const Order = require('../models/Order');
 const Product = require('../models/Product');
-const { isAuthenticated, isAdmin } = require('../middlewares/auth');
+// const { isAuthenticated, isAdmin } = require('../middlewares/auth');
 
 // Create new order
-router.post('/', isAuthenticated, async (req, res) => {
+router.post('/', async (req, res) => {
   try {
     const { items, shippingAddress, paymentMethod } = req.body;
 
@@ -54,8 +54,23 @@ router.post('/', isAuthenticated, async (req, res) => {
   }
 });
 
+
+router.post('/add', (req,res) => {
+    console.log(req.body);
+
+  new Model(req.body).save()
+
+  .then((result) => {
+    res.status(200).json(result);
+  })
+  .catch((err) => {
+    res.status(500).json({ message: 'Some error occurred' });
+    console.log(err);
+  });
+})
+
 // Get user orders
-router.get('/my-orders', isAuthenticated, async (req, res) => {
+router.get('/my-orders', async (req, res) => {
   try {
     const orders = await Order.find({ user: req.user.id })
       .populate('items.product')
@@ -68,7 +83,7 @@ router.get('/my-orders', isAuthenticated, async (req, res) => {
 });
 
 // Get single order
-router.get('/:id', isAuthenticated, async (req, res) => {
+router.get('/:id', async (req, res) => {
   try {
     const order = await Order.findById(req.params.id)
       .populate('items.product');
@@ -89,7 +104,7 @@ router.get('/:id', isAuthenticated, async (req, res) => {
 });
 
 // Update order status (Admin only)
-router.put('/:id/status', isAuthenticated, isAdmin, async (req, res) => {
+router.put('/:id/status', async (req, res) => {
   try {
     const { status, trackingNumber, estimatedDelivery } = req.body;
     
@@ -113,7 +128,7 @@ router.put('/:id/status', isAuthenticated, isAdmin, async (req, res) => {
 });
 
 // Get all orders (Admin only)
-router.get('/', isAuthenticated, isAdmin, async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const { status, page = 1, limit = 10 } = req.query;
     let query = {};

@@ -259,8 +259,9 @@ const AddProductPage = () => {
                   </div>
 
                   <div className="space-y-1">
-                    <label htmlFor="image" className="text-sm font-medium text-gray-700">
+                    <label htmlFor="upload" className="text-sm font-medium text-gray-700">
                       Product Image
+                      <input type="file" id="upload" onChange={ProductImage} hidden/>
                     </label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -268,9 +269,9 @@ const AddProductPage = () => {
                       <input
                         id="image"
                         name="image"
-                        type="file"
+                        type="text"
                         // value={productForm.values.image}
-                        onChange={ProductImage}
+                        onChange={productForm.handleChange}
                         onBlur={productForm.handleBlur}
                         className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-rose-500 focus:border-rose-500"
                         placeholder="upload image"

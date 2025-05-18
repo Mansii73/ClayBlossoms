@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const Product = require('../models/Product');
+// const { isAuthenticated } = require('../middlewares/auth'); // If using auth middleware
 
 // Get all products
-router.get('/products', async (req, res) => {
+router.get('/getall', async (req, res) => {
   try {
     const products = await Product.find();
     res.json(products);
@@ -26,14 +27,8 @@ router.get('/products/:id', async (req, res) => {
   }
 });
 
-<<<<<<< HEAD
-// Create product (Admin only)
-router.post('/add', async (req, res) => {
-  console.log(req.body);
-=======
 // Create product
-router.post('/products', async (req, res) => {
->>>>>>> 5fe7e71ce3909064a4ccb4881d84de0faa000ad0
+router.post('/add', async (req, res) => {
   try {
     const product = new Product(req.body);
     const savedProduct = await product.save();
@@ -77,7 +72,7 @@ router.delete('/products/:id', async (req, res) => {
 });
 
 // Add product rating and review
-router.post('/products/:id/reviews', isAuthenticated, async (req, res) => {
+router.post('/products/:id/reviews', async (req, res) => {
   try {
     const { rating, review } = req.body;
     const product = await Product.findById(req.params.id);
@@ -86,7 +81,6 @@ router.post('/products/:id/reviews', isAuthenticated, async (req, res) => {
       return res.status(404).json({ message: 'Product not found' });
     }
 
-    // Check if user already reviewed
     const existingReview = product.ratings.find(
       r => r.user.toString() === req.user._id.toString()
     );
@@ -102,7 +96,6 @@ router.post('/products/:id/reviews', isAuthenticated, async (req, res) => {
       });
     }
 
-    // Calculate average rating
     const totalRatings = product.ratings.reduce((acc, item) => acc + item.rating, 0);
     product.averageRating = totalRatings / product.ratings.length;
 

@@ -69,14 +69,6 @@ const productSchema = new mongoose.Schema({
       default: Date.now
     }
   }],
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-  
->>>>>>> 5fe7e71ce3909064a4ccb4881d84de0faa000ad0
-}, {
-=======
->>>>>>> 6cccf694d541bc9294bd80c08ac0e3bc62354043
   createdAt: {
     type: Date,
     default: Date.now
